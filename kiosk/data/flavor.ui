@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FlavorWindow</class>
+ <widget class="QMainWindow" name="FlavorWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>769</width>
+    <height>475</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>771</width>
+      <height>431</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/icon/Screenshot from 2024-07-04 10-57-05.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="kiosklabel">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>-20</y>
+      <width>251</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Dyuthi</family>
+      <pointsize>47</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+      <underline>false</underline>
+     </font>
+    </property>
+    <property name="text">
+     <string>Choose !</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="kiosklabel_2">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>60</y>
+      <width>291</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Dyuthi</family>
+      <pointsize>30</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+      <underline>false</underline>
+     </font>
+    </property>
+    <property name="text">
+     <string>What Flavor ?</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="turkey">
+    <property name="geometry">
+     <rect>
+      <x>555</x>
+      <y>110</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Uroob</family>
+      <pointsize>56</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/icon/free-icon-turkey-12694430.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="turkey_2">
+    <property name="geometry">
+     <rect>
+      <x>305</x>
+      <y>130</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Uroob</family>
+      <pointsize>56</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/icon/free-icon-turkey-12694430.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="turkey_3">
+    <property name="geometry">
+     <rect>
+      <x>75</x>
+      <y>110</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Uroob</family>
+      <pointsize>56</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/icon/free-icon-turkey-12694430.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="chocoBtn">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>150</y>
+      <width>191</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/icon/Screenshot_from_2024-07-04_12-20-15-removebg-preview.png);
+background-color: rgba(0, 0, 0, 0); /* 투명 배경 */
+    border: none; /* 버튼 테두리 제거 */</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="strawberryBtn">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>170</y>
+      <width>191</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/icon/Screenshot_from_2024-07-04_12-19-44-removebg-preview.png);
+background-color: rgba(0, 0, 0, 0); /* 투명 배경 */
+    border: none; /* 버튼 테두리 제거 */</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="mintBtn">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>150</y>
+      <width>191</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/icon/Screenshot_from_2024-07-04_12-20-02-removebg-preview.png);
+background-color: rgba(0, 0, 0, 0); /* 투명 배경 */
+    border: none; /* 버튼 테두리 제거 */</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>label</zorder>
+   <zorder>kiosklabel</zorder>
+   <zorder>kiosklabel_2</zorder>
+   <zorder>chocoBtn</zorder>
+   <zorder>turkey</zorder>
+   <zorder>strawberryBtn</zorder>
+   <zorder>turkey_2</zorder>
+   <zorder>mintBtn</zorder>
+   <zorder>turkey_3</zorder>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>769</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="resourece_order.qrc"/>
+ </resources>
+ <connections/>
+</ui>
