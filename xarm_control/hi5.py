@@ -1,14 +1,15 @@
 import rclpy
 from rclpy.node import Node
 from xarm_msgs.srv import MoveJoint, MoveCartesian, SetDigitalIO, SetAnalogIO, Call, SetInt16ById
+from std_srvs.srv import SetBool
 from std_msgs.msg import Bool
 from rclpy.qos import QoSPresetProfiles
-import logging
+# import logging
 import queue
 
 class XArmControlNode(Node):
     def __init__(self):
-        super().__init__('xarm_test2')
+        super().__init__('hi5')
         qos_profile_system = QoSPresetProfiles.SYSTEM_DEFAULT.value
         self.capsule_queue = queue.Queue()
 
@@ -27,6 +28,7 @@ class XArmControlNode(Node):
         
         #서비스 만들기
         self.aruco_status_service = self.create_service(SetInt16ById, "aruco_status", self.aruco_callback)
+        self.star_status_service = self.create_service(SetBool, "star_status", self.star_callback)
 
         # 서비스가 활성화될 때까지 대기
         self.wait_for_service(self.set_servo_angle_service, 'angle set service')
@@ -39,6 +41,18 @@ class XArmControlNode(Node):
         self.wait_for_service(self.stop_lite6_gripper_service, 'stop lite6 gripper service')
 
         self.call_services()
+
+    def star_callback(self, req, res):
+        if req.data == True:
+            self.star_status = True
+            self.get_logger().info("Star founded!!!")
+        else:
+            self.star_status = False
+            self.get_logger().info("Star not founded!!!")
+
+        res.success = True
+        res.message = "star_status_service callback"
+        return res
     
     def aruco_callback(self, req, res): # aruco 
         if req.id == 0 :
@@ -49,9 +63,14 @@ class XArmControlNode(Node):
             self.capsule_position = 3
         else:
             self.get_logger().info("aruco id's error")
-        self.capsule_queue.put(self.capsule_position) # queue 형식으로 들어온 capsule 위치 추가 -> 순차적 처리 위함, 처리됐을때 큐에서 제거하는거 추가필요
-        self.get_logger().info(f"Queue : {self.capsule_queue}")
+        self.capsule_queue.put(self.capsule_position) # queue 형식으로 들어온 capsule 위치 추가 -> 순차적 처리 위함, 처리됐을때 큐에서 제거하는거 추가필요 .get()
+
+        queue_contents = list(self.capsule_queue.queue) #queue의 객체를 로깅할때는 기본적으로 메모리주소, -> list화해야함
+        self.get_logger().info(f"Queue : {queue_contents}")
         self.get_logger().info(f"Aruco Callback Request id: {req.id}, data: {req.data}")
+        # 응답 설정
+        res.message = "Aruco ID processed successfully"
+        return res
     
     def intruder_callback(self, signal):
         if signal.data:  # Bool 메시지의 data 필드를 확인해야 합니다.
@@ -63,6 +82,7 @@ class XArmControlNode(Node):
     def wait_for_service(self, client, service_name):
         while not client.wait_for_service(timeout_sec=5.0):
             self.get_logger().info(f'Waiting for {service_name}...')
+        self.get_logger().info(f"{service_name} Service is ready")
 
     def async_service_call(self, client, request, service_name): #비동기 콜 필요시 동기로 수정
         future = client.call_async(request)
@@ -140,16 +160,17 @@ class XArmControlNode(Node):
         position_request.radius = radius
         self.async_service_call(self.set_position_service, position_request, service_name)
         
-    def call_services(self):
-        self.control_gripper('close')
+    def call_services(self): # 일단 여기서 명령줌 ! like main
+        # self.control_gripper('close')
         # self.control_gripper('stop', 10.0)
         # self.control_gripper('open')
         # self.control_gripper('stop')
+        pass
 
 
 def main(args=None):
     # 로깅 설정
-    logging.basicConfig(level=logging.INFO, force=True)
+    # logging.basicConfig(level=logging.INFO, force=True)
     
     rclpy.init(args=args)
     node = XArmControlNode()

@@ -9,6 +9,7 @@ from rclpy.node import Node
 
 from sensor_msgs.msg import Image
 from std_msgs.msg import Bool
+from std_srvs.srv import SetBool
 from xarm_msgs.srv import SetInt16ById
 from cv_bridge import CvBridge, CvBridgeError
 
@@ -24,10 +25,12 @@ class Cam2ImageProcessor(Node):
 
         self.img_subscriber = self.create_subscription(Image, "image_raw_cam2", self.change_image, qos_profile_sensor)
         self.intruder_publisher = self.create_publisher(Bool, 'intruder_signal', qos_profile_system)
-        self.aruco_status = self.create_client(SetInt16ById, "aruco_status")
+        self.aruco_status_service = self.create_client(SetInt16ById, "aruco_status")
+        self.star_status_service = self.create_client(SetBool, "star_status")
         
         # Initialize the timer callback with 50 ms interval
         self.timer_callback = self.create_timer(0.5, self.intruder_callback)
+        self.wait_for_service(self.aruco_status_service, 'aruco status service')
         
         self.bridge = CvBridge()
         self.frame = None
@@ -47,16 +50,23 @@ class Cam2ImageProcessor(Node):
         self.font_scale = 1
         self.font_thickness = 2
         self.font = cv2.FONT_HERSHEY_SIMPLEX
+        
+    def wait_for_service(self, client, service_name):
+        while not client.wait_for_service(timeout_sec=5.0):
+            self.get_logger().info(f'Waiting for {service_name}...')
+        self.get_logger().info(f"{service_name} is ready")
 
-    def async_service_call(self, client, request, service_name): #비동기 콜 필요시 동기로 수정
+    def async_service_call(self, client, request, service_name): # 비동기 콜
         future = client.call_async(request)
-        rclpy.spin_until_future_complete(self, future)
-        if future.result() is not None:
-            self.get_logger().info(f'{service_name} succeeded with message: {future.result().message}')
-            return 0  # 성공하면 0 반환
-        else:
-            self.get_logger().warning(f'Failed to send {service_name} command')
-            return -1  # 실패하면 -1 반환
+        future.add_done_callback(lambda future: self.handle_service_response(future, service_name))
+        return future
+
+    def handle_service_response(self, future, service_name):
+        try:
+            response = future.result()
+            self.get_logger().info(f'{service_name} succeeded with message: {response.message}')
+        except Exception as e:
+            self.get_logger().warning(f'Failed to send {service_name} command: {e}')
 
     def intruder_callback(self):
         # This function should now be called at the specified interval
@@ -78,18 +88,20 @@ class Cam2ImageProcessor(Node):
         frame = self.detect_intrusion(frame)
         return frame
     
+    def set_star_status(self):
+        service_name = "star_status"
+        star_request = SetBool.Request()
+        star_request.data = self.star_status
+        return self.async_service_call(self.star_status_service, star_request, service_name)
+    
     def set_aruco_status(self, id, data): #this is for gripper motion
         service_name = "aruco_status"
         aruco_request = SetInt16ById.Request()
-        aruco_request.id = id
-        aruco_request.data = data
-        return self.async_service_call(self.aruco_status, aruco_request, service_name)
+        aruco_request.id = int(id)
+        aruco_request.data = int(data)
+        return self.async_service_call(self.aruco_status_service, aruco_request, service_name)
 
     def detect_aruco_markers(self, frame):
-        # flag_1 = 0
-        # flag_2 = 0
-        # flag_3 = 0
-
         roi_medium = frame[0:60, 270:540]
         corners, ids, _ = aruco.detectMarkers(roi_medium, self.aruco_dict, parameters=self.parameters)
         current_time = time.time()
@@ -101,11 +113,11 @@ class Cam2ImageProcessor(Node):
                 if current_time - last_time > 5:
                     print(f"Action executed for marker ID {id} (not moved for 5 seconds)")
                     if id == 0:
-                        self.set_aruco_status(self, id, 1) #비동기 서비스콜로 응답없이 감지된 aruco no 전송
+                        self.set_aruco_status(id, 1) #비동기 서비스콜로 response없이 감지된 aruco no 전송
                     elif id == 1:
-                        self.set_aruco_status(self, id, 1)
+                        self.set_aruco_status(id, 1)
                     else:
-                        self.set_aruco_status(self, id, 1)
+                        self.set_aruco_status(id, 1)
                     
                     del self.last_seen[id]
                     break
@@ -117,16 +129,19 @@ class Cam2ImageProcessor(Node):
         blurred = cv2.GaussianBlur(gray, (5, 5), 0)
         edged = cv2.Canny(blurred, canny_thresh1, canny_thresh2)
         contours, _ = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        if len(contours) == 1:
+        if len(contours) == (1 or 2):
             contour = contours[0]
             epsilon = 0.02 * cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, epsilon, True)
-            if len(approx) >= 10:
+            if len(approx) <= 10:
                 star_contour = approx + [464, 118]
                 cv2.drawContours(frame, [star_contour], -1, (0, 255, 0), 3)
                 cv2.putText(frame, "Star detected", (10, 30), self.font, 1, (0, 255, 255), 2)
+                self.star_status = True
+                self.set_star_status()
             else:
                 cv2.putText(frame, "Star not detected", (10, 30), self.font, 1, (0, 255, 255), 2)
+                self.star_status = False
         else:
             cv2.putText(frame, "Star not detected", (10, 30), self.font, 1, (0, 255, 255), 2)
         frame[118:153, 464:499] = cv2.cvtColor(edged, cv2.COLOR_GRAY2BGR)

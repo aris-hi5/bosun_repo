@@ -16,7 +16,7 @@ class Cam2Pulisher(Node):
         time_period = 0.01
         self.timer = self.create_timer(time_period, self.time_callback) # 주기적으로 토픽을 발행하기 위함
         self.bridge = CvBridge()
-        self.cap = cv2.VideoCapture(4)
+        self.cap = cv2.VideoCapture(0)
 
     def time_callback(self):
         ret, frame = self.cap.read()
