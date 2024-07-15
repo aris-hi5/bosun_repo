@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from xarm_msgs.srv import MoveJoint, MoveCartesian, SetDigitalIO, SetAnalogIO, Call, SetInt16ById
+from xarm_msgs.srv import MoveJoint, MoveCartesian, SetDigitalIO, SetAnalogIO, Call, SetInt16ById, SetInt16, GetInt16
 from std_srvs.srv import SetBool
 from std_msgs.msg import Bool
 from rclpy.qos import QoSPresetProfiles
@@ -25,7 +25,9 @@ class XArmControlNode(Node):
         self.open_lite6_gripper_service = self.create_client(Call, '/ufactory/open_lite6_gripper')
         self.close_lite6_gripper_service = self.create_client(Call, '/ufactory/close_lite6_gripper')
         self.stop_lite6_gripper_service = self.create_client(Call, '/ufactory/stop_lite6_gripper')
-        
+        self.set_state_service = self.create_client(SetInt16, '/ufactory/set_state')
+        self.get_state_service = self.create_client(GetInt16, '/ufactory/get_state')
+
         #서비스 만들기
         self.aruco_status_service = self.create_service(SetInt16ById, "aruco_status", self.aruco_callback)
         self.star_status_service = self.create_service(SetBool, "star_status", self.star_callback)
@@ -39,6 +41,8 @@ class XArmControlNode(Node):
         self.wait_for_service(self.open_lite6_gripper_service, 'open lite6 gripper service')
         self.wait_for_service(self.close_lite6_gripper_service, 'close lite6 gripper service')
         self.wait_for_service(self.stop_lite6_gripper_service, 'stop lite6 gripper service')
+        self.wait_for_service(self.set_state_service, 'set state service')
+        self.wait_for_service(self.get_state_service, 'get state service')
 
         self.call_services()
 
@@ -74,10 +78,33 @@ class XArmControlNode(Node):
     
     def intruder_callback(self, signal):
         if signal.data:  # Bool 메시지의 data 필드를 확인해야 합니다.
-            self.get_logger().info("Intruder Detected !")
+            self.get_logger().info("intruder detected")
+            state_request = SetInt16.Request()
+            state_request.data = 3
+            self.async_service_call(self.set_state_service, state_request, "set_state_service")
+            # if response is not None:
+            #     self.get_logger().info("Set state service call succeeded")
+            #     self.check_state()
+            # else:
+            #     self.get_logger().warning("Set state service call failed")
+
         else:
-            pass
-            
+            # state_request = SetInt16.Request()
+            # state_request.data = int(0)
+            # self.async_service_call(self.set_state_service, state_request, "set_state_service")
+            state_request = SetInt16.Request()
+            state_request.data = 0
+            self.async_service_call(self.set_state_service, state_request, "set_state_service")
+
+    def check_state(self):
+        state_request = GetInt16.Request()
+        self.async_service_call(self.get_state_service, state_request, "get_state_service")
+
+        # if response is not None:
+        #     state = response.data
+        #     self.get_logger().info(f"Current state: {state}")
+        # else:
+        #     self.get_logger().warning("Failed to get state")
 
     def wait_for_service(self, client, service_name):
         while not client.wait_for_service(timeout_sec=5.0):
@@ -86,13 +113,25 @@ class XArmControlNode(Node):
 
     def async_service_call(self, client, request, service_name): #비동기 콜 필요시 동기로 수정
         future = client.call_async(request)
-        rclpy.spin_until_future_complete(self, future)
-        if future.result() is not None:
-            self.get_logger().info(f'{service_name} succeeded with message: {future.result().message}')
-            return 0  # 성공하면 0 반환
-        else:
-            self.get_logger().warning(f'Failed to send {service_name} command')
-            return -1  # 실패하면 -1 반환
+        # rclpy.spin_until_future_complete(self, future)
+        future.add_done_callback(lambda future: self.handle_service_response(future,service_name))
+        return future
+        # try:
+        #     return future.result()
+        # except Exception as e:
+        #     self.get_logger().error(f"{service_name} call failed: {e}")
+        #     return None
+
+    def handle_service_response(self, future, service_name):
+        try:
+            response = future.result()
+            if service_name == "set_state_service":
+                self.get_logger().info(f"{service_name} succeeded")
+                self.check_state()
+            else:
+                self.get_logger().info(f"{service_name} succeeded with response: {response}")
+        except Exception as e:
+            self.get_logger().error(f"{service_name} call failed: {e}")
 
     def set_tgpio_digital(self, ionum, value): #this is for gripper motion
         service_name = "set_tgpio_digital"
@@ -161,11 +200,9 @@ class XArmControlNode(Node):
         self.async_service_call(self.set_position_service, position_request, service_name)
         
     def call_services(self): # 일단 여기서 명령줌 ! like main
-        # self.control_gripper('close')
-        # self.control_gripper('stop', 10.0)
         # self.control_gripper('open')
-        # self.control_gripper('stop')
         pass
+
 
 
 def main(args=None):
