@@ -1,11 +1,13 @@
 import rclpy
 from rclpy.node import Node
-from xarm_msgs.srv import MoveJoint, MoveCartesian, SetDigitalIO, SetAnalogIO, Call, SetInt16ById, SetInt16, GetInt16
+from xarm_msgs.srv import MoveJoint, MoveCartesian, SetDigitalIO, SetAnalogIO, Call, SetInt16ById, SetInt16, GetInt16, OrderCall
 from std_srvs.srv import SetBool
 from std_msgs.msg import Bool
 from rclpy.qos import QoSPresetProfiles
 # import logging
 import queue
+import json
+
 
 class XArmControlNode(Node):
     def __init__(self):
@@ -31,6 +33,7 @@ class XArmControlNode(Node):
         #서비스 만들기
         self.aruco_status_service = self.create_service(SetInt16ById, "aruco_status", self.aruco_callback)
         self.star_status_service = self.create_service(SetBool, "star_status", self.star_callback)
+        self.order_call_service = self.create_service(OrderCall, "order_call", self.ordercall_callback)
 
         # 서비스가 활성화될 때까지 대기
         self.wait_for_service(self.set_servo_angle_service, 'angle set service')
@@ -45,6 +48,18 @@ class XArmControlNode(Node):
         self.wait_for_service(self.get_state_service, 'get state service')
 
         self.call_services()
+    
+    def ordercall_callback(self, req, res):
+        if req.data:
+            json_data = json.loads(req.data)
+            self.get_logger().info("OrderCall Service !!")
+            self.get_logger().info(f"{json_data}")
+        else:
+            self.get_logger().info("OrdrCall no data")
+        
+        res.success = True
+        res.message = "order call service callback"
+        return res
 
     def star_callback(self, req, res):
         if req.data == True:

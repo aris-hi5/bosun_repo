@@ -5,10 +5,9 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QCursor
-from PyQt5.QtGui import QPixmap
 
-import socket
 import time
+import json  # 추가
 
 # image data
 import resource_qrc 
@@ -17,8 +16,8 @@ import resource_topping_qrc
 import resource_pay_qrc
 from tcp import TCPClient
 
-HOST = '172.30.1.60' # bosun ip
-PORT = 9012
+HOST = '172.30.1.70' # bosun ip
+PORT = 9002
 
 global ORDER_NO
 ORDER_NO = 0
@@ -115,6 +114,7 @@ class ToppingWindow(QMainWindow):
         info_window.show()
         self.topping_window.hide()
         
+
 class InfoWindow(QMainWindow): 
     def __init__(self, tcp_server, taste, list_topping):
         super().__init__()
@@ -144,28 +144,20 @@ class InfoWindow(QMainWindow):
     
     def send_data(self):
         print("send_data called")
-        cmd = "OR"
-        flavor_index = 0
-        if self.taste == "choco":
-            flavor_index = 1
-        elif self.taste == "strawberry":
-            flavor_index = 2
-        elif self.taste == "mint":
-            flavor_index = 3
 
-        topping_indices = [0, 0, 0]  # Initialize topping indices
-        if "cerial" in self.list_topping:
-            topping_indices[0] = 1
-        if "oreo" in self.list_topping:
-            topping_indices[1] = 1
-        if "chocoball" in self.list_topping:
-            topping_indices[2] = 1
+        # JSON 데이터 생성
+        data = {
+            "OR": {
+                "icecream": self.taste,
+                "topping": ', '.join(self.list_topping)
+            }
+        }
         
-        data = f"O-{ORDER_NO}", f"F-{flavor_index}", f"T-{topping_indices[0]}{topping_indices[1]}{topping_indices[2]}"
-        print(f"Sending data: {cmd},{data}")
-        self.tcp_server.send(cmd, data)
-
+        # JSON 데이터 문자열로 변환
+        json_data = json.dumps(data)
         
+        print(f"Sending data: {json_data}")
+        self.tcp_server.send(json_data)
 
     def handle_tcp_response(self, response): # tcp로부터 받은 데이터 처리 -> tcp.py로 가면 자세히 확인가능
         if response == "0":
@@ -186,10 +178,10 @@ class InfoWindow(QMainWindow):
 
         elif response == "5":
             self.restart()
-    
+
     def set_cup(self):
         self.info_window.cup.show()
-        
+
     def set_flavor(self):
         self.info_window.cup.hide()
         if self.taste == "choco":
@@ -200,7 +192,7 @@ class InfoWindow(QMainWindow):
 
         elif self.taste == "mint":
             self.info_window.mint.show()
-        
+
     def set_topping(self):
         # Show toppings based on the list
         for topping in self.list_topping:
@@ -212,27 +204,12 @@ class InfoWindow(QMainWindow):
 
             elif topping == "cerial":
                 self.info_window.cerialtopping.show()
-    
+
     def set_turkey(self):
         self.info_window.turkey.show()
 
     def restart(self): # 주문이 끝나고 주문 다시 시작하기 위함 (tcp는 다시 연결안하게 tcp만 전달하면 될듯)
         pass
-                    
-
-
-        
-
-
-            
-
-            
-    
-
-
-
-
-        
 
 
 
