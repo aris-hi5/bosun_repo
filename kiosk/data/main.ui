@@ -6,31 +6,36 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>769</width>
-    <height>477</height>
+    <width>1920</width>
+    <height>820</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset resource="resource.qrc">
     <normaloff>:/icon/free-icon-hand-cursor-5781782.png</normaloff>:/icon/free-icon-hand-cursor-5781782.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>771</width>
-      <height>431</height>
+      <x>-450</x>
+      <y>-40</y>
+      <width>2401</width>
+      <height>900</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba( 255,255,255);
-background:transparent;
-image: url(:/icon/Screenshot from 2024-07-04 10-28-03.png);</string>
+     <string notr="true">
+
+background-image: url(:/icon/Screenshot from 2024-07-04 10-28-03.png);
+    background-position: bottom center; /* 바닥 중앙에서 시작 */
+</string>
     </property>
     <property name="text">
      <string/>
@@ -39,10 +44,10 @@ image: url(:/icon/Screenshot from 2024-07-04 10-28-03.png);</string>
    <widget class="QLabel" name="hightfiveimo">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>110</y>
-      <width>151</width>
-      <height>101</height>
+      <x>1030</x>
+      <y>160</y>
+      <width>191</width>
+      <height>201</height>
      </rect>
     </property>
     <property name="font">
@@ -63,16 +68,16 @@ image: url(:/icon/Screenshot from 2024-07-04 10-28-03.png);</string>
    <widget class="QLabel" name="hilabel">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>80</y>
-      <width>144</width>
-      <height>161</height>
+      <x>780</x>
+      <y>130</y>
+      <width>321</width>
+      <height>251</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Waree</family>
-      <pointsize>90</pointsize>
+      <pointsize>160</pointsize>
       <weight>75</weight>
       <italic>false</italic>
       <bold>true</bold>
@@ -86,16 +91,16 @@ image: url(:/icon/Screenshot from 2024-07-04 10-28-03.png);</string>
    <widget class="QLabel" name="kiosklabel">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>190</y>
-      <width>261</width>
-      <height>121</height>
+      <x>710</x>
+      <y>330</y>
+      <width>561</width>
+      <height>201</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Waree</family>
-      <pointsize>53</pointsize>
+      <pointsize>120</pointsize>
       <weight>75</weight>
       <italic>false</italic>
       <bold>true</bold>
@@ -109,16 +114,16 @@ image: url(:/icon/Screenshot from 2024-07-04 10-28-03.png);</string>
    <widget class="QLabel" name="orderlabel">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>270</y>
-      <width>131</width>
-      <height>51</height>
+      <x>1510</x>
+      <y>520</y>
+      <width>161</width>
+      <height>60</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Waree</family>
-      <pointsize>15</pointsize>
+      <pointsize>23</pointsize>
       <weight>75</weight>
       <italic>false</italic>
       <bold>true</bold>
@@ -138,10 +143,10 @@ image: url(:/icon/Screenshot from 2024-07-04 10-28-03.png);</string>
    <widget class="QPushButton" name="orderBtn">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>250</y>
-      <width>201</width>
-      <height>161</height>
+      <x>1450</x>
+      <y>470</y>
+      <width>301</width>
+      <height>271</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -165,7 +170,7 @@ image: url(:/icon/Screenshot from 2024-07-04 10-28-03.png);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>769</width>
+     <width>1920</width>
      <height>22</height>
     </rect>
    </property>
@@ -173,7 +178,7 @@ image: url(:/icon/Screenshot from 2024-07-04 10-28-03.png);</string>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="resource.qrc"/>
  </resources>
  <connections/>
 </ui>

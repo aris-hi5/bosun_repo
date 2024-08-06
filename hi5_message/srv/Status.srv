@@ -1,0 +1,9 @@
+#star_status
+
+
+string cmd
+int8 status
+
+---
+bool success
+string message

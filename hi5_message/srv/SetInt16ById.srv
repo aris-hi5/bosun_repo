@@ -1,0 +1,10 @@
+#aruco_status
+
+
+int16 id
+int16 data
+
+---
+
+int16 ret
+string message

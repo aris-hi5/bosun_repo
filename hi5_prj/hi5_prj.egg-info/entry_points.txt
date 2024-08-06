@@ -1,0 +1,11 @@
+[console_scripts]
+cam1 = hi5_prj.cam1:main
+cam2 = hi5_prj.cam2:main
+db_manager = hi5_prj.DBManager:main
+kiosk_manager = hi5_prj.KioskManager:main
+main = hi5_prj.main:main
+test3 = hi5_hi5_prjpkg.test3:main
+vision_cam1 = hi5_prj.vision_cam1:main
+vision_cam2 = hi5_prj.vision_cam2:main
+yolo = hi5_prj.yolo:main
+

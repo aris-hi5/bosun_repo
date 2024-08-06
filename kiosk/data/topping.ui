@@ -6,21 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>767</width>
-    <height>477</height>
+    <width>1920</width>
+    <height>821</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(175, 212, 255);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="choco">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>60</y>
-      <width>401</width>
-      <height>371</height>
+      <x>930</x>
+      <y>220</y>
+      <width>521</width>
+      <height>651</height>
      </rect>
     </property>
     <property name="font">
@@ -41,10 +44,10 @@
    <widget class="QLabel" name="strawberry">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>60</y>
-      <width>330</width>
-      <height>380</height>
+      <x>940</x>
+      <y>240</y>
+      <width>500</width>
+      <height>611</height>
      </rect>
     </property>
     <property name="font">
@@ -65,10 +68,10 @@
    <widget class="QLabel" name="mint">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>50</y>
-      <width>281</width>
-      <height>401</height>
+      <x>970</x>
+      <y>240</y>
+      <width>440</width>
+      <height>610</height>
      </rect>
     </property>
     <property name="font">
@@ -89,16 +92,16 @@
    <widget class="QLabel" name="kiosklabel_3">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>30</y>
-      <width>291</width>
-      <height>51</height>
+      <x>70</x>
+      <y>40</y>
+      <width>491</width>
+      <height>171</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Dyuthi</family>
-      <pointsize>30</pointsize>
+      <pointsize>60</pointsize>
       <weight>50</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -112,10 +115,10 @@
    <widget class="QPushButton" name="oreoBtn">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>170</y>
-      <width>111</width>
-      <height>101</height>
+      <x>320</x>
+      <y>390</y>
+      <width>121</width>
+      <height>141</height>
      </rect>
     </property>
     <property name="font">
@@ -136,10 +139,10 @@
    <widget class="QPushButton" name="chocoballBtn">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>180</y>
-      <width>101</width>
-      <height>81</height>
+      <x>530</x>
+      <y>400</y>
+      <width>131</width>
+      <height>121</height>
      </rect>
     </property>
     <property name="font">
@@ -160,10 +163,10 @@
    <widget class="QPushButton" name="cerialBtn">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>180</y>
-      <width>91</width>
-      <height>81</height>
+      <x>750</x>
+      <y>400</y>
+      <width>151</width>
+      <height>121</height>
      </rect>
     </property>
     <property name="font">
@@ -184,10 +187,10 @@
    <widget class="QLabel" name="chocotopping">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>50</y>
-      <width>281</width>
-      <height>401</height>
+      <x>890</x>
+      <y>240</y>
+      <width>571</width>
+      <height>621</height>
      </rect>
     </property>
     <property name="font">
@@ -200,7 +203,8 @@
     </property>
     <property name="styleSheet">
      <string notr="true">
-image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</string>
+image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);
+background-color: rgba(0, 0, 0, 0);</string>
     </property>
     <property name="text">
      <string/>
@@ -209,10 +213,10 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
    <widget class="QLabel" name="cerialtopping">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>60</y>
-      <width>261</width>
-      <height>391</height>
+      <x>990</x>
+      <y>280</y>
+      <width>431</width>
+      <height>521</height>
      </rect>
     </property>
     <property name="font">
@@ -224,7 +228,8 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">image: url(:/icon/Screenshot_from_2024-07-04_13-20-51-removebg-preview.png);</string>
+     <string notr="true">image: url(:/icon/Screenshot_from_2024-07-04_13-20-51-removebg-preview.png);
+background-color: rgba(0, 0, 0, 0);</string>
     </property>
     <property name="text">
      <string/>
@@ -233,10 +238,10 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
    <widget class="QLabel" name="oreotopping">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>0</y>
-      <width>311</width>
-      <height>511</height>
+      <x>880</x>
+      <y>260</y>
+      <width>641</width>
+      <height>591</height>
      </rect>
     </property>
     <property name="font">
@@ -249,7 +254,7 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
     </property>
     <property name="styleSheet">
      <string notr="true">image: url(:/icon/Screenshot_from_2024-07-04_13-21-06-removebg-preview.png);
-</string>
+background-color: rgba(0, 0, 0, 0);</string>
     </property>
     <property name="text">
      <string/>
@@ -258,8 +263,8 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
    <widget class="QLabel" name="kiosklabel_4">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>250</y>
+      <x>330</x>
+      <y>510</y>
       <width>81</width>
       <height>51</height>
      </rect>
@@ -281,8 +286,8 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
    <widget class="QLabel" name="kiosklabel_5">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>250</y>
+      <x>530</x>
+      <y>510</y>
       <width>111</width>
       <height>51</height>
      </rect>
@@ -304,8 +309,8 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
    <widget class="QLabel" name="kiosklabel_6">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>250</y>
+      <x>750</x>
+      <y>510</y>
       <width>101</width>
       <height>51</height>
      </rect>
@@ -327,10 +332,10 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
    <widget class="QLabel" name="turkey">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>10</y>
-      <width>111</width>
-      <height>101</height>
+      <x>1020</x>
+      <y>160</y>
+      <width>340</width>
+      <height>180</height>
      </rect>
     </property>
     <property name="font">
@@ -342,7 +347,8 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">image: url(:/icon/free-icon-turkey-12694430.png);</string>
+     <string notr="true">image: url(:/icon/free-icon-turkey-12694430.png);
+background-color: rgba(191, 64, 64, 0);</string>
     </property>
     <property name="text">
      <string/>
@@ -352,13 +358,15 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
-      <width>771</width>
-      <height>431</height>
+      <y>-110</y>
+      <width>1920</width>
+      <height>900</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">image: url(:/icon/Screenshot from 2024-07-04 12-05-16.png);</string>
+     <string notr="true">background-image: url(:/icon/Screenshot from 2024-07-04 12-05-16.png);
+    background-position: bottom center; /* 바닥 중앙에서 시작 */
+</string>
     </property>
     <property name="text">
      <string/>
@@ -367,16 +375,16 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
    <widget class="QLabel" name="orderlabel">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>270</y>
-      <width>131</width>
-      <height>51</height>
+      <x>1510</x>
+      <y>530</y>
+      <width>281</width>
+      <height>110</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Waree</family>
-      <pointsize>15</pointsize>
+      <pointsize>40</pointsize>
       <weight>75</weight>
       <italic>false</italic>
       <bold>true</bold>
@@ -387,7 +395,7 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
      <bool>true</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
     </property>
     <property name="text">
      <string>Let's Go</string>
@@ -396,10 +404,10 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
    <widget class="QPushButton" name="infoBtn">
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>250</y>
-      <width>131</width>
-      <height>141</height>
+      <x>1490</x>
+      <y>490</y>
+      <width>301</width>
+      <height>321</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -434,7 +442,7 @@ image: url(:/icon/Screenshot_from_2024-07-04_13-20-28-removebg-preview.png);</st
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>767</width>
+     <width>1920</width>
      <height>22</height>
     </rect>
    </property>

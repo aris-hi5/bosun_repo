@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="icon">
+    <file>data/Screenshot from 2024-07-04 10-28-03.png</file>
+    <file>data/Screenshot from 2024-07-04 12-05-16.png</file>
+    <file>data/free-icon-hand-cursor-5781782.png</file>
+    <file>data/free-icon-direction-1653447.png</file>
+  </qresource>
+</RCC>
