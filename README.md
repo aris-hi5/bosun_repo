@@ -2,8 +2,10 @@
 git clone https://github.com/aris-hi5/bosun_repo.git
 <br>
 // 레포지토리 이동<br>
-cd bosun_repo <br>
-cd hi5_prj<br>
+```
+cd bosun_repo
+cd hi5_prj
+```
 <br>
 // xarm-Python-SDK 클론<br>
 git clone https://github.com/xArm-Developer/xArm-Python-SDK.git<br>
