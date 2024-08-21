@@ -1,15 +1,22 @@
-# bosun_repo
+# 패키지 설치
+
+<b>bosun_repo 클론</b>
+```
 git clone https://github.com/aris-hi5/bosun_repo.git
-<br>
-// 레포지토리 이동<br>
+```
+
+<b>bosun_repo 레포지토리 이동</b>
 ```
 cd bosun_repo
 cd hi5_prj
 ```
-<br>
-// xarm-Python-SDK 클론<br>
+<b>xarm-Python-SDK 클론</b>
+```
 git clone https://github.com/xArm-Developer/xArm-Python-SDK.git<br>
-<br>
-// xarm-Python-SDK 패키지 설치<br>
-cd xarm-Python-SDK<br>
-pip install . <br>
+```
+
+<b>xarm-Python-SDK 패키지 설치</b>
+```
+cd xarm-Python-SDK
+pip install .
+```
