@@ -86,6 +86,9 @@ class KioskManager(Node):
                     self.send_to_db_request(data)
                     self.send_to_rm_request(data)
                     print("CMD : OR 처리중")
+                if "TR" in data:
+                    self.send_to_db_request(data)
+                    print("CMD : TR 처리중")
                 else:
                     print("Unknown CMD")
 
@@ -110,10 +113,16 @@ class KioskManager(Node):
             
             future = self.order_call_db_service.call_async(request)
             future.add_done_callback(lambda future: self.order_call_db_response(future))#dbmanager response처리
-
+        elif "TR" in data:
+            print(f"Received order request: {data}")
+            # JSON 데이터를 String 메시지로 변환하여 서비스 요청 생성
+            request = OrderCall.Request()
+            request.data = data  # json -> string
+            
+            future = self.order_call_db_service.call_async(request)
+            future.add_done_callback(lambda future: self.order_call_db_response(future))#dbmanager response처리
         elif "OS" in data:
             print(f"Received order status request: {data}")
-        
             # JSON 데이터를 String 메시지로 변환하여 서비스 요청 생성
             request = OrderCall.Request()
             request.data = data  # json -> string
@@ -165,7 +174,22 @@ class KioskManager(Node):
                         data = message_data.get("detail",[])
                         msg = '\n'.join(data)
                         self.client_send(f"ER,{msg}")
-
+                        
+                elif "TR" in message_dict:
+                    self.get_logger().info("TR detected in message")
+                    message_data = message_dict.get("TR", {})
+                    self.get_logger().info(f"Message data: {message_data}")
+                    
+                    if "tables" in message_data:
+                        self.get_logger().info("Processing tables")
+                        tables = message_data.get("tables", [])
+                        self.get_logger().info(f"Tables: {tables}")
+                        self.client_send(f"TR,{tables}")
+                    else:
+                        data = message_data.get("detail", [])
+                        msg = '\n'.join(data)
+                        self.client_send(f"ER,{msg}")
+                        
                 elif "OS" in message_dict:
                     self.get_logger().info(f"OS message: {response.message}")
                 
