@@ -21,7 +21,7 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>100</y>
+      <y>50</y>
       <width>861</width>
       <height>101</height>
      </rect>
@@ -43,8 +43,8 @@
    <widget class="QLabel" name="flavor">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>210</y>
+      <x>170</x>
+      <y>130</y>
       <width>811</width>
       <height>161</height>
      </rect>
@@ -60,14 +60,14 @@
      </font>
     </property>
     <property name="text">
-     <string>Flavor:</string>
+     <string>Flavor :</string>
     </property>
    </widget>
    <widget class="QLabel" name="topping">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>340</y>
+      <x>120</x>
+      <y>230</y>
       <width>891</width>
       <height>181</height>
      </rect>
@@ -83,7 +83,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Topping:</string>
+     <string>Topping :</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -332,6 +332,29 @@ background-color: rgba(191, 64, 64, 0);</string>
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="tableno">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>350</y>
+      <width>891</width>
+      <height>181</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Dyuthi</family>
+      <pointsize>48</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+      <underline>false</underline>
+     </font>
+    </property>
+    <property name="text">
+     <string>Table No :</string>
+    </property>
+   </widget>
    <zorder>label</zorder>
    <zorder>choco</zorder>
    <zorder>mint</zorder>
@@ -345,6 +368,7 @@ background-color: rgba(191, 64, 64, 0);</string>
    <zorder>cerialtopping</zorder>
    <zorder>turkey</zorder>
    <zorder>ordercheck</zorder>
+   <zorder>tableno</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
