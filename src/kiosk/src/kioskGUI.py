@@ -17,10 +17,14 @@ import resource_pay_qrc
 import resource_serve_qrc
 import resource_table_qrc
 from tcp import TCPClient
+from dotenv import load_dotenv
 
 # HOST = '192.168.1.9' # robot ip
 # HOST = '192.168.1.7' # wono ip
 # HOST = '172.30.1.51'  # xyz 5g ip
+
+load_dotenv()
+HOST = os.getenv('HOST_IP')
 
 # PORT = 9005
 PORT = 9003
@@ -29,7 +33,7 @@ PORT = 9003
 def get_ui_path(relative_path):
     """프로젝트의 base 디렉토리를 기준으로 상대 경로를 반환"""
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(base_dir, '..', 'data', 'ui', relative_path)
+    return os.path.join(base_dir, '../data/ui', relative_path)
 
 
 class Order():
