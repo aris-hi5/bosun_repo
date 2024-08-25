@@ -25,6 +25,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 HOST = os.getenv('HOST_IP')
+HOST = "127.0.0.1"
 
 # PORT = 9005
 PORT = 9003
@@ -39,7 +40,7 @@ def get_ui_path(relative_path):
 class Order():
     def __init__(self):
         self.icecream = None
-        self.topping = None
+        self.toppings = None
         self.table = None
 
 
@@ -70,6 +71,7 @@ class ServingWindow(QMainWindow):
     def __init__(self, tcp_server):
         super().__init__()
         self.tcp_server = tcp_server
+        self.order = Order()
         self.init_ui()
 
     def init_ui(self):
@@ -87,22 +89,22 @@ class ServingWindow(QMainWindow):
 
     def go_table(self):
         print("eat here clicked")
-        self.TableWindow = TableWindow(self.tcp_server)
+        self.TableWindow = TableWindow(self.tcp_server, self.order)
         self.TableWindow.show()
         self.serving_window.hide()
 
-    def go_icecream(self, table_number=None):
+    def go_flavor(self):
         print("take out clicked")
-        self.FlavorWindow = FlavorWindow(self.tcp_server, table_number)
+        self.FlavorWindow = FlavorWindow(self.tcp_server, self.order)
         self.FlavorWindow.show()
         self.serving_window.hide()
 
 
 class TableWindow(QMainWindow):
-    def __init__(self, tcp_server):
+    def __init__(self, tcp_server, order):
         super().__init__()
         self.tcp_server = tcp_server
-        self.selected_table = None  # 선택한 테이블 번호를 저장할 변수
+        self.order = order
         self.init_ui()
 
     def init_ui(self):
@@ -124,22 +126,22 @@ class TableWindow(QMainWindow):
             lambda: self.select_table(4))
 
     def select_table(self, table_number):
-        self.selected_table = table_number
+        self.order.table = table_number
         print(f"Selected table: {table_number}")
         self.go_flavor()
 
     def go_flavor(self):
         print("Navigating to flavor selection!")
-        self.FlavorWindow = FlavorWindow(self.tcp_server, self.selected_table)
+        self.FlavorWindow = FlavorWindow(self.tcp_server, self.order)
         self.FlavorWindow.show()
         self.table_window.hide()
 
 
 class FlavorWindow(QMainWindow):
-    def __init__(self, tcp_server, table_number):
+    def __init__(self, tcp_server, order):
         super().__init__()
         self.tcp_server = tcp_server
-        self.table_number = table_number  # 테이블 번호를 저장
+        self.order = order
         self.init_ui()
 
     def init_ui(self):
@@ -158,18 +160,18 @@ class FlavorWindow(QMainWindow):
 
     def go_topping(self, flavor):
         print(f"Selected flavor: {flavor}")
+        self.order.icecream = flavor
         self.topping_window = ToppingWindow(
-            self.tcp_server, flavor, self.table_number)  # 테이블 번호도 전달
+            self.tcp_server, self.order)  # 테이블 번호도 전달
         self.topping_window.show()
         self.flavor_window.hide()
 
 
 class ToppingWindow(QMainWindow):
-    def __init__(self, tcp_server, flavor, table_number):
+    def __init__(self, tcp_server, order):
         super().__init__()
         self.tcp_server = tcp_server
-        self.flavor = flavor
-        self.table_number = table_number  # 테이블 번호를 저장
+        self.order = order
         self.list_topping = []
         self.init_ui()
 
@@ -196,11 +198,11 @@ class ToppingWindow(QMainWindow):
             lambda: self.toggle_topping("cereal", self.topping_window.cerialtopping))
         self.topping_window.infoBtn.clicked.connect(self.go_info)
 
-        if self.flavor == "choco":
+        if self.order.icecream == "choco":
             self.topping_window.choco.show()
-        elif self.flavor == "strawberry":
+        elif self.order.icecream == "strawberry":
             self.topping_window.strawberry.show()
-        elif self.flavor == "mint":
+        elif self.order.icecream == "mint":
             self.topping_window.mint.show()
 
     def toggle_topping(self, topping, label_widget):
@@ -214,19 +216,18 @@ class ToppingWindow(QMainWindow):
 
     def go_info(self):
         # InfoWindow 초기화 시 table_number를 전달합니다.
+        self.order.toppings = self.list_topping
         self.info_window = InfoWindow(
-            self.tcp_server, self.flavor, self.list_topping, self.table_number)
+            self.tcp_server, self.order)
         self.info_window.show()
         self.topping_window.hide()
 
 
 class InfoWindow(QMainWindow):
-    def __init__(self, tcp_server, taste, list_topping, table_number):
+    def __init__(self, tcp_server, order):
         super().__init__()
         self.tcp_server = tcp_server
-        self.taste = taste
-        self.list_topping = list_topping
-        self.table_number = table_number  # 테이블 번호를 저장
+        self.order = order
         self.init_ui()
 
     def init_ui(self):
@@ -244,23 +245,27 @@ class InfoWindow(QMainWindow):
         self.info_window.cerialtopping.hide()
 
         self.info_window.orderno.setText(f"Order No: None")
-        self.info_window.flavor.setText(f"Flavor: {self.taste}")
+        self.info_window.flavor.setText(f"Flavor: {self.order.icecream}")
         self.info_window.topping.setText(
-            f"Topping: {', '.join(self.list_topping)}")
+            f"Topping: {', '.join(self.order.toppings)}")
         self.info_window.tableno.setText(
-            f"Table No: {self.table_number}")  # 테이블 번호 표시
+            f"Table No: {self.order.table}")  # 테이블 번호 표시
 
         self.send_data()
 
     def send_data(self):
         print("send_data called")
-        data = {"OR": {"icecream": self.taste, "topping": ','.join(
-            self.list_topping)}}
-        json_data = json.dumps(data)
-        print(f"Sending data: {json_data}")
-        self.tcp_server.send(json_data)
-
-        data = {"OR": {"table": self.table_number}}
+        order_data = {"OR": {"icecream": self.order.icecream, "topping": ','.join(
+            self.order.toppings)}}
+        json_order__data = json.dumps(order_data)
+        print(f"Sending data: {json_order__data}")
+        self.tcp_server.send(json_order__data)
+        
+        if self.order.table:
+            table_data = {"TR": {"table": self.order.table, "request": 0}}
+            json_table_data = json.dumps(table_data)
+            print(f"Sending data: {json_table_data}")
+            self.tcp_server.send(json_table_data)
 
     def handle_tcp_response(self, response):
         print(response)
@@ -270,6 +275,8 @@ class InfoWindow(QMainWindow):
             self.orderId = data.strip()
             self.info_window.orderno.setText(f"Order No: 004")
             self.info_window.ordercheck.hide()
+        elif cmd == "TR":
+            print("전체 테이블 정보", data)
         elif cmd == "OS":
             data = data.strip()
             if data == "0":
@@ -300,15 +307,15 @@ class InfoWindow(QMainWindow):
 
     def set_flavor(self):
         self.info_window.cup.hide()
-        if self.taste == "choco":
+        if self.order.icecream == "choco":
             self.info_window.choco.show()
-        elif self.taste == "strawberry":
+        elif self.order.icecream == "strawberry":
             self.info_window.strawberry.show()
-        elif self.taste == "mint":
+        elif self.order.icecream == "mint":
             self.info_window.mint.show()
 
     def set_topping(self):
-        for topping in self.list_topping:
+        for topping in self.order.toppings:
             if topping == "oreo":
                 self.info_window.oreotopping.show()
             elif topping == "chocoball":
