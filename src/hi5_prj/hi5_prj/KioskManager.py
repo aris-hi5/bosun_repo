@@ -9,7 +9,10 @@ from std_msgs.msg import String
 from hi5_message.srv import OrderCall
 
 # HOST = '192.168.1.9'
-HOST = '172.30.1.51'
+# HOST = '172.30.1.51'
+
+# 테스트 후 삭제요망
+HOST = "127.0.0.1"
 
 KIOSK_PORT = 9003
 

@@ -60,6 +60,13 @@ class TCPClient:
                                     self.or_callback(response)
                             else:
                                 print("no order callback data")
+                        elif cmd == 'TR':
+                            if data:
+                                print("table info successfully")
+                                if self.order_call_callback:
+                                    self.or_callback(response)
+                            else:
+                                print("no table info data")
                         elif cmd == 'OS':
                             if data:
                                 print("order status successfully")
