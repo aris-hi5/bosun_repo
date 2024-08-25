@@ -1,13 +1,18 @@
 import json
+import os
+from dotenv import load_dotenv
 import requests
 import rclpy
 from rclpy.node import Node
 from hi5_message.srv import OrderCall
 
 # url = "http://192.168.1.8:8000/kiosk"
-kiosk = "http://172.30.1.51:8000/kiosk"
-robot = "http://172.30.1.5:8000/robot"
-table = "http://172.30.1.51:8000/table"
+kiosk = "http://172.30.1.51:8000"
+robot = "http://172.30.1.5:8000"
+table = "http://172.30.1.51:8000"
+
+# 테스트 후 삭제요망
+table = "172.30.1.92:8000"
 
 
 class DBManagerNode(Node):
@@ -29,7 +34,7 @@ class DBManagerNode(Node):
                     headers = {"Content-Type": "application/json",
                                "dataType": "json"}
                     response = requests.post(
-                        url=self.kiosk, headers=headers, data=req.data)
+                        url=self.kiosk+"/kiosk", headers=headers, data=req.data)
                     self.get_logger().info(f"{response}")
                     self.get_logger().info(f"ororororor{req.data}")
                     # self.get_logger().info(f"hihihihi{response}")
@@ -53,17 +58,17 @@ class DBManagerNode(Node):
                     # 필요한 정보를 추출
                     tr_data = data["TR"]
                     id_value = tr_data["id"]
-                    status_value = tr_data["status"]
+                    request_value = tr_data["request"]
 
                     # URL을 생성
                     self.table = self.table + f'/{id_value}'
 
                     # 요청에 사용할 JSON 데이터
-                    json_data = {"status": status_value}
+                    json_data = {"request": request_value}
 
                     # PATCH 요청
                     response = requests.patch(
-                        url=self.table, headers=headers, data=json_data)
+                        url=self.table+"/table", headers=headers, data=json_data)
 
                     self.get_logger().info(f"{response}")
                     self.get_logger().info(f"trtrtrtrtr{req.data}")
@@ -84,7 +89,7 @@ class DBManagerNode(Node):
                     headers = {"Content-Type": "application/json",
                                "dataType": "json"}
                     response = requests.post(
-                        url=self.robot, headers=headers, data=req.data)
+                        url=self.robot+"/robot", headers=headers, data=req.data)
 
                     # self.get_logger().info(f"{response}")
                     # self.get_logger().info(f"osososososo{req.data}")
