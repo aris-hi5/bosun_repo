@@ -1,7 +1,10 @@
+import os
 import socket
 import threading
 import queue
 import json
+
+from dotenv import load_dotenv
 
 import rclpy
 from rclpy.node import Node
@@ -11,8 +14,8 @@ from hi5_message.srv import OrderCall
 # HOST = '192.168.1.9'
 # HOST = '172.30.1.51'
 
-# 테스트 후 삭제요망
-HOST = "127.0.0.1"
+load_dotenv()
+HOST = os.getenv('HOST_IP')
 
 KIOSK_PORT = 9003
 
@@ -51,7 +54,7 @@ class KioskManager(Node):
         self.accept_thread = threading.Thread(target=self.accept_clients)
         self.accept_thread.start()
 
-        self.wait_for_service(self.order_call_rm_service, "order call service")
+        # self.wait_for_service(self.order_call_rm_service, "order call service")
         self.wait_for_service(self.order_call_db_service,
                               "order call db service")
 
@@ -95,9 +98,6 @@ class KioskManager(Node):
                     self.send_to_db_request(data)
                     self.send_to_rm_request(data)
                     print("CMD : OR 처리중")
-                if "TR" in data:
-                    self.send_to_db_request(data)
-                    print("CMD : TR 처리중")
                 else:
                     print("Unknown CMD")
 
@@ -115,16 +115,8 @@ class KioskManager(Node):
             lambda future: self.order_call_rm_response(future))  # dbm
 
     def send_to_db_request(self, data):  # order 서비스 콜 to db
-        if "OR" in data:
-            print(f"Received order request: {data}")
-            # JSON 데이터를 String 메시지로 변환하여 서비스 요청 생성
-            request = OrderCall.Request()
-            request.data = data  # json -> string
 
-            future = self.order_call_db_service.call_async(request)
-            future.add_done_callback(lambda future: self.order_call_db_response(
-                future))  # dbmanager response처리
-        elif "TR" in data:
+        if "OR" in data:
             print(f"Received order request: {data}")
             # JSON 데이터를 String 메시지로 변환하여 서비스 요청 생성
             request = OrderCall.Request()
@@ -179,23 +171,14 @@ class KioskManager(Node):
 
                     if "orderId" in message_data:
                         self.get_logger().info("Processing order ID")
+                        
                         order_id = message_data.get("orderId")
                         self.get_logger().info(f"Order ID: {order_id}")
-                        self.client_send(f"OR,{order_id}")
-                    else:
-                        data = message_data.get("detail", [])
-                        msg = '\n'.join(data)
-                        self.client_send(f"ER,{msg}")
-
-                elif "TR" in message_dict:
-                    self.get_logger().info("TR detected in message")
-                    message_data = message_dict.get("TR", {})
-                    self.get_logger().info(f"Message data: {message_data}")
-
-                    if "tables" in message_data:
-                        self.get_logger().info("Processing tables")
-                        tables = message_data.get("tables", [])
+                        
+                        tables = message_data.get("tables")
                         self.get_logger().info(f"Tables: {tables}")
+                        
+                        self.client_send(f"OR,{order_id}")
                         self.client_send(f"TR,{tables}")
                     else:
                         data = message_data.get("detail", [])

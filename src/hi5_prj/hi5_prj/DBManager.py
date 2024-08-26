@@ -9,10 +9,6 @@ from hi5_message.srv import OrderCall
 # url = "http://192.168.1.8:8000/kiosk"
 kiosk = "http://172.30.1.51:8000"
 robot = "http://172.30.1.5:8000"
-table = "http://172.30.1.51:8000"
-
-# 테스트 후 삭제요망
-table = "172.30.1.92:8000"
 
 
 class DBManagerNode(Node):
@@ -20,7 +16,6 @@ class DBManagerNode(Node):
         super().__init__('db_manager_node')
         self.kiosk = kiosk
         self.robot = robot
-        self.table = table
         self.order_call_db_service = self.create_service(
             OrderCall, "order_call_db", self.ordercall_callback)
 
@@ -49,41 +44,7 @@ class DBManagerNode(Node):
 
                     res.success = True
                     res.message = message
-                    return res
-                elif "TR" in req.data:
-                    headers = {"Content-Type": "application/json",
-                               "dataType": "json"}
-                    data = json.loads(req.data)
-
-                    # 필요한 정보를 추출
-                    tr_data = data["TR"]
-                    id_value = tr_data["id"]
-                    request_value = tr_data["request"]
-
-                    # URL을 생성
-                    self.table = self.table + f'/{id_value}'
-
-                    # 요청에 사용할 JSON 데이터
-                    json_data = {"request": request_value}
-
-                    # PATCH 요청
-                    response = requests.patch(
-                        url=self.table+"/table", headers=headers, data=json_data)
-
-                    self.get_logger().info(f"{response}")
-                    self.get_logger().info(f"trtrtrtrtr{req.data}")
-                    # self.get_logger().info(f"hihihihi{response}")
-                    self.get_logger().info(
-                        f"trtrtrtr{response.json()}")  # json형태
-                    message = response.json()
-                    self.get_logger().info(
-                        f"responseresponseresponse{message}")
-
-                    # object(dict) -> string(json)
-                    message = json.dumps(message)
-
-                    res.success = True
-                    res.message = message
+                    self.get_logger().info(f"res.message{res.message}")
                     return res
                 elif "OS" in req.data:
                     headers = {"Content-Type": "application/json",
