@@ -16,6 +16,7 @@ class TCPClient:
         self.receive_thread.start()
 
         self.or_callback = None
+        self.tr_callback = None
         self.os_callback = None
         
     def order_call_callback(self, callback):
@@ -25,6 +26,10 @@ class TCPClient:
     def order_status_callback(self, callback):
         print("order status callback")
         self.os_callback = callback
+
+    def tables_call_callback(self, callback):
+        print("tables call callback")
+        self.tr_callback = callback
 
     def connect(self):
         try:
@@ -51,7 +56,6 @@ class TCPClient:
                 if self.socket:
                     response = self.socket.recv(1024).decode('utf-8')
                     if response:
-                        print(response)
                         cmd, data = response.split(',', 1)
                         if cmd == 'OR':
                             if data:
@@ -60,13 +64,13 @@ class TCPClient:
                                     self.or_callback(response)
                             else:
                                 print("no order callback data")
-                        elif cmd == 'TR':
+                        if cmd == 'TR':
                             if data:
-                                print("table info successfully")
+                                print("tables call successfully")
                                 if self.order_call_callback:
                                     self.or_callback(response)
                             else:
-                                print("no table info data")
+                                print("no tables callback data")
                         elif cmd == 'OS':
                             if data:
                                 print("order status successfully")
