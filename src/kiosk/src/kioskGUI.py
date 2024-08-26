@@ -25,7 +25,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 HOST = os.getenv('HOST_IP')
-HOST = "127.0.0.1"
 
 # PORT = 9005
 PORT = 9003
@@ -85,7 +84,7 @@ class ServingWindow(QMainWindow):
 
         self.serving_window.eat_here_Btn.clicked.connect(self.go_table)
         self.serving_window.takeout_Btn.clicked.connect(
-            lambda: self.go_icecream(None))
+            self.go_flavor)
 
     def go_table(self):
         print("eat here clicked")
@@ -95,6 +94,7 @@ class ServingWindow(QMainWindow):
 
     def go_flavor(self):
         print("take out clicked")
+        self.order.table = 0
         self.FlavorWindow = FlavorWindow(self.tcp_server, self.order)
         self.FlavorWindow.show()
         self.serving_window.hide()
@@ -114,7 +114,6 @@ class TableWindow(QMainWindow):
         self.table_window.Table1_Btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.table_window.Table2_Btn.setCursor(QCursor(Qt.PointingHandCursor))
         self.table_window.Table3_Btn.setCursor(QCursor(Qt.PointingHandCursor))
-        self.table_window.Table4_Btn.setCursor(QCursor(Qt.PointingHandCursor))
 
         self.table_window.Table1_Btn.clicked.connect(
             lambda: self.select_table(1))
@@ -122,8 +121,6 @@ class TableWindow(QMainWindow):
             lambda: self.select_table(2))
         self.table_window.Table3_Btn.clicked.connect(
             lambda: self.select_table(3))
-        self.table_window.Table4_Btn.clicked.connect(
-            lambda: self.select_table(4))
 
     def select_table(self, table_number):
         self.order.table = table_number
@@ -246,37 +243,33 @@ class InfoWindow(QMainWindow):
 
         self.info_window.orderno.setText(f"Order No: None")
         self.info_window.flavor.setText(f"Flavor: {self.order.icecream}")
-        self.info_window.topping.setText(
-            f"Topping: {', '.join(self.order.toppings)}")
-        self.info_window.tableno.setText(
-            f"Table No: {self.order.table}")  # 테이블 번호 표시
+        self.info_window.topping.setText(f"Topping: {', '.join(self.order.toppings)}")
+        if self.order.table == 0:
+            self.info_window.tableno.setText("Takeout")
+        else:
+            self.info_window.tableno.setText(f"Table No: {self.order.table}")  # 테이블 번호 표시
 
         self.send_data()
 
     def send_data(self):
         print("send_data called")
-        order_data = {"OR": {"icecream": self.order.icecream, "topping": ','.join(
-            self.order.toppings)}}
-        json_order__data = json.dumps(order_data)
-        print(f"Sending data: {json_order__data}")
-        self.tcp_server.send(json_order__data)
         
-        if self.order.table:
-            table_data = {"TR": {"table": self.order.table, "request": 0}}
-            json_table_data = json.dumps(table_data)
-            print(f"Sending data: {json_table_data}")
-            self.tcp_server.send(json_table_data)
+        order_data = {"OR": {"icecream": self.order.icecream, 
+                             "topping": ','.join(self.order.toppings), 
+                             "table": self.order.table}}
+        json_order_data = json.dumps(order_data) + "\n" # 구분자 추가
+        print(f"Sending data: {json_order_data}")
+        self.tcp_server.send(json_order_data)
 
     def handle_tcp_response(self, response):
-        print(response)
         cmd, data = response.split(',', 1)
         print(f"cmd: {cmd}, data:{data}")
         if cmd == "OR":
             self.orderId = data.strip()
-            self.info_window.orderno.setText(f"Order No: 004")
+            self.info_window.orderno.setText(f"Order No : {self.orderId}")
             self.info_window.ordercheck.hide()
         elif cmd == "TR":
-            print("전체 테이블 정보", data)
+            pass
         elif cmd == "OS":
             data = data.strip()
             if data == "0":

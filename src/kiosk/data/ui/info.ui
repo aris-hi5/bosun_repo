@@ -20,7 +20,7 @@
    <widget class="QLabel" name="orderno">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>100</x>
       <y>50</y>
       <width>861</width>
       <height>101</height>
@@ -43,7 +43,7 @@
    <widget class="QLabel" name="flavor">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>100</x>
       <y>130</y>
       <width>811</width>
       <height>161</height>
@@ -66,7 +66,7 @@
    <widget class="QLabel" name="topping">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>100</x>
       <y>230</y>
       <width>891</width>
       <height>181</height>
