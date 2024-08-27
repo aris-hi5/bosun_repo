@@ -31,6 +31,8 @@ class KioskManager(Node):
         self.running = True  # 노드 실행 여부 플래그
 
         # ros통신 송신용 client
+        self.order_call_st_service = self.create_client(
+            OrderCall, "order_call_st") # 스토리지 통신
         self.order_call_rm_service = self.create_client(
             OrderCall, "order_call")  # hi5통신
         self.order_call_db_service = self.create_client(
@@ -54,9 +56,9 @@ class KioskManager(Node):
         self.accept_thread = threading.Thread(target=self.accept_clients)
         self.accept_thread.start()
 
+        self.wait_for_service(self.order_call_st_service, "order call st service")
         # self.wait_for_service(self.order_call_rm_service, "order call service")
-        self.wait_for_service(self.order_call_db_service,
-                              "order call db service")
+        self.wait_for_service(self.order_call_db_service, "order call db service")
 
     def wait_for_service(self, client, service_name):
         while not client.wait_for_service(timeout_sec=5.0):
@@ -97,6 +99,7 @@ class KioskManager(Node):
                 if "OR" in data:
                     self.send_to_db_request(data)
                     self.send_to_rm_request(data)
+                    self.send_to_st_request(data)
                     print("CMD : OR 처리중")
                 else:
                     print("Unknown CMD")
@@ -105,6 +108,14 @@ class KioskManager(Node):
                 print(f"JSON 파싱 오류: {e}")
             except Exception as e:
                 print(f"데이터 처리 중 오류: {e}")
+                
+    def send_to_st_request(self, data):
+        request = OrderCall.Request()
+        request.data = data
+        
+        future = self.order_call_st_service.call_async(request)
+        future.add_done_callback(
+            lambda future: self.order_call_st_response(future))
 
     def send_to_rm_request(self, data):
         request = OrderCall.Request()
@@ -135,6 +146,18 @@ class KioskManager(Node):
             # future.add_done_callback(lambda future: self.order_call_db_response(future))#dbmanager response처리
         else:
             self.get_logger().info("send to db request error")
+
+    def order_call_st_response(self, future):
+        try:
+            response = future.result()
+            self.get_logger().info(f"{response}")
+
+            if response.success:
+                print("order call st Success")
+            else:
+                print("order call st Error")
+        except Exception as e:
+            print(f"서비스 콜 응답 처리 중 오류: {e}")
 
     def order_call_rm_response(self, future):
         try:
